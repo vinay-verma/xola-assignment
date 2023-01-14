@@ -2,10 +2,11 @@ package com.xola.assignment.model;
 
 import java.util.Objects;
 
-public class Town extends Grid implements Infectable {
+public class Town extends Grid implements Infectable, Curable {
 
     private Coordinate coordinate;
     private boolean infected;
+    private boolean medicalCenter;
 
     public Town() {
         this(0, 0);
@@ -28,6 +29,19 @@ public class Town extends Grid implements Infectable {
         this.infected = infected;
     }
 
+    public boolean isMedicalCenter() {
+        return medicalCenter;
+    }
+
+    public void setMedicalCenter(boolean medicalCenter) {
+        this.medicalCenter = medicalCenter;
+    }
+
+    @Override
+    public boolean isImmune() {
+        return isMedicalCenter();
+    }
+
     @Override
     public boolean isInfected() {
         return this.infected;
@@ -35,7 +49,9 @@ public class Town extends Grid implements Infectable {
 
     @Override
     public void infect() {
-        this.setInfected(true);
+        if (!this.medicalCenter) {
+            this.setInfected(true);
+        }
     }
 
     @Override
@@ -49,5 +65,18 @@ public class Town extends Grid implements Infectable {
     @Override
     public int hashCode() {
         return Objects.hash(coordinate);
+    }
+
+    @Override
+    public void cure() {
+        this.setInfected(false);
+    }
+
+    public boolean isNeibourOf(Coordinate a) {
+        Integer x = this.getCoordinate().getX();
+        Integer y = this.getCoordinate().getY();
+        Integer ax = a.getX();
+        Integer ay = a.getY();
+        return Math.abs(x - ax) <= 1 || Math.abs(y - ay) <= 1;
     }
 }

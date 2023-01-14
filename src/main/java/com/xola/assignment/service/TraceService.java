@@ -7,6 +7,7 @@ import com.xola.assignment.model.Person;
 import com.xola.assignment.model.Region;
 import com.xola.assignment.model.Town;
 import com.xola.assignment.model.enums.Movement;
+import com.xola.assignment.model.enums.PersonType;
 import com.xola.assignment.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,15 @@ public class TraceService {
         Set<Person> persons = input.getPersons().stream().map(
                 p -> new Person(
                         CommonUtils.getCoordinateFromPositionString(p.getInitialPosition()),
-                        p.getMovement()
+                        p.getMovement(),
+                        p.getType()
                 )
         ).collect(Collectors.toSet());
 
         Region region = new Region(grid.getLength(), grid.getBreadth(), infectedCells);
+        input.getMedicalCentres().forEach(m -> {
+            region.getTown(new Coordinate(m.getX(), m.getY())).setMedicalCenter(true);
+        });
         return traceMovement(region, persons).printInfectionState();
     }
 
@@ -56,10 +61,15 @@ public class TraceService {
                         if (currentTown == null) {
                             throw new AssignmentException("Town could not be found with coordinate " + newPosition);
                         }
-                        if (person.isInfected()) {
-                            if (currentTown.isInfected()) {
-                                logger.debug("Town already infected");
-                            } else {
+                        if (person.getType().equals(PersonType.medic)) {
+                            logger.debug("Medic Visit, Town cured " +  person.getCurrentPosition());
+                            currentTown.cure();
+                        } else if (person.isInfected()) {
+                            if (currentTown.isImmune()) {
+                                person.cure();
+                            } else if (currentTown.isInfected()) {
+                                logger.debug("Town already infected" + currentTown.getCoordinate());
+                            } else if (!region.isNeiboursOfAMedicalCenter(currentTown.getCoordinate())) {
                                 currentTown.infect();
                                 logger.debug("Infecting town: " + currentTown.getCoordinate());
                             }

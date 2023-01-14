@@ -2,27 +2,29 @@ package com.xola.assignment.model;
 
 import com.xola.assignment.exception.AssignmentException;
 import com.xola.assignment.model.enums.Direction;
+import com.xola.assignment.model.enums.PersonType;
 
-public class Person implements Infectable, Movable {
+public class Person implements Infectable, Movable, Curable {
 
     private Coordinate initialPosition;
     private Coordinate currentPosition;
     private String movements;
     private boolean infected;
+    private PersonType type = PersonType.citizen;
 
     private Person() {
-
     }
 
-    public Person(Coordinate coordinate, String movements) {
-        this(coordinate, movements, false);
+    public Person(Coordinate coordinate, String movements, PersonType type) {
+        this(coordinate, movements, false, type);
     }
 
-    public Person(Coordinate coordinate, String movements, boolean infected) {
+    public Person(Coordinate coordinate, String movements, boolean infected, PersonType type) {
         this.initialPosition = coordinate;
         this.currentPosition = coordinate;
         this.movements = movements;
         this.infected = infected;
+        this.type = type;
     }
 
     public Coordinate getInitialPosition() {
@@ -57,6 +59,22 @@ public class Person implements Infectable, Movable {
 
     public void setInfected(boolean infected) {
         this.infected = infected;
+    }
+
+    public PersonType getType() {
+        if (type == null) {
+            type = PersonType.citizen;
+        }
+        return type;
+    }
+
+    public void setType(PersonType type) {
+        this.type = type;
+    }
+
+    @Override
+    public boolean isImmune() {
+        return false;
     }
 
     @Override
@@ -119,5 +137,10 @@ public class Person implements Infectable, Movable {
                 ", movements='" + movements + '\'' +
                 ", infected='" + infected + '\'' +
                 '}';
+    }
+
+    @Override
+    public void cure() {
+        this.setInfected(false);
     }
 }

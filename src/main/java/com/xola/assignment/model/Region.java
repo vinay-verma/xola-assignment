@@ -48,6 +48,17 @@ public class Region extends Grid {
         return null;
     };
 
+    public boolean isNeiboursOfAMedicalCenter(Coordinate a) {
+        Integer x = a.getX();
+        Integer y = a.getY();
+        for (Town town : towns) {
+            if (town.isImmune() && town.isNeibourOf(a)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     public String printInfectionState() {
         boolean[][] grid = new boolean[getLength()][getWidth()];
         for (Town town : this.getTowns()) {

@@ -1,11 +1,15 @@
 package com.xola.assignment.dto;
 
+import com.xola.assignment.model.enums.PersonType;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InputDto implements Serializable {
     private Grid grid;
     private List<Coordinate> infectedCells;
+    private List<Coordinate> medicalCentres;
     private List<Person> persons;
 
     public Grid getGrid() {
@@ -30,6 +34,17 @@ public class InputDto implements Serializable {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+
+    public List<Coordinate> getMedicalCentres() {
+        if (medicalCentres == null) {
+            medicalCentres = new ArrayList<>();
+        }
+        return medicalCentres;
+    }
+
+    public void setMedicalCentres(List<Coordinate> medicalCentres) {
+        this.medicalCentres = medicalCentres;
     }
 
     public static class Grid {
@@ -77,6 +92,7 @@ public class InputDto implements Serializable {
     public static class Person {
         private String initialPosition;
         private String movement;
+        private PersonType type;
 
         public String getInitialPosition() {
             return initialPosition;
@@ -92,6 +108,14 @@ public class InputDto implements Serializable {
 
         public void setMovement(String movement) {
             this.movement = movement;
+        }
+
+        public PersonType getType() {
+            return type;
+        }
+
+        public void setType(PersonType type) {
+            this.type = type;
         }
     }
 }
