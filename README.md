@@ -94,7 +94,7 @@ You should notice the application starting up,
 cdc-shell:>
 ```
 
-Once the application starts up, type `trace -f <full path to input json>` to add up two integers. You should notice `region infection state` in the terminal.
+Once the application starts up, type `trace -f <full path to input json>` to upload input json file. You should notice `region infection state` in the terminal.
 ```
 cdc-shell:>trace -f /Users/vinay/work/personal/xola-assignment/src/test/resources/input.json
 OOOOO
